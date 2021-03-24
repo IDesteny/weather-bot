@@ -1,5 +1,4 @@
 ﻿#include <iostream>
-#include <thread>
 #include "HttpHelper.h"
 #include "Parser.h"
 

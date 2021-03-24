@@ -1,27 +1,42 @@
 ﻿#include <iostream>
+#include <thread>
 #include "HttpHelper.h"
 #include "Parser.h"
-#include <thread>
+
+void output(const float C)
+{
+	std::cout << "\nTemperature: " << C << std::endl;
+}
+
+std::string input()
+{
+	std::cout << "Enter city:\n>> ";
+
+	std::string city;
+	std::cin >> city;
+
+	return std::move(city);
+}
 
 int main()
 {
-	using std::string;
+	using namespace std;
+
+	const auto key = "b8f018693cafdf2757edc95cd73f367c";
+	const auto city = input();
+
+	const auto host = "api.openweathermap.org";
+	const auto target = "/data/2.5/weather?q=" + city + "&appid=" + key;
+
+	const auto response = http::HttpHelper::request(host, target);
 	
-	const string key = "b8f018693cafdf2757edc95cd73f367c";
-	const string city = "Grabovo";
+	const auto temp = jsn::Parser::parse(response, "temp");
 
-	const string host = "api.openweathermap.org";
-	const string target = "/data/2.5/weather?q=" + city + "&appid=" + key;
+	const auto K = 273u;
+	const auto T = std::stof(temp.c_str());
+	const auto C = T - K;
 
-	const string response = http::HttpHelper::request(host, target);
-	
-	const string temp = jsn::Parser::parse(response, "temp");
-
-	const unsigned short K = 273u;
-	const unsigned short T = atoi(temp.c_str());
-	const int C = T - K;
-
-	std::cout << "C: " << C << std::endl;
+	output(C);
 
 	return 0;
 }

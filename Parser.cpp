@@ -4,7 +4,7 @@ std::string jsn::Parser::parse(const std::string &json, const std::string &field
 {
 	using namespace boost;
 
-	regex pattern("\"" + field + "\":([^,]*)");
+	regex pattern("\"" + field + "\":([^,}]*)");
 	smatch res;
 
 	regex_search(json, res, pattern);
